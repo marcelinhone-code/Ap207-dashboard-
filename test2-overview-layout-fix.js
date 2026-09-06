@@ -1,0 +1,7 @@
+(()=>{'use strict';
+const AUTH='ap207-auth-profile-v1';
+function role(){try{return JSON.parse(localStorage.getItem(AUTH)||'{}')?.profile?.role||'owner'}catch{return'owner'}}
+function place(){const r=role();if(!['admin','super_admin'].includes(r))return;const home=document.querySelector('.app-screen[data-screen-panel="home"]');if(!home)return;const scope=document.getElementById('homeScopePanel');if(r==='admin'&&scope&&scope.parentNode!==home){const first=[...home.children].find(x=>!x.classList?.contains('scenic-banner'));home.insertBefore(scope,first||home.firstChild);scope.hidden=false;scope.style.display=''}if(r==='super_admin'){const dash=document.getElementById('t2SuperDashboardV2');if(dash&&dash.parentNode===home&&home.firstElementChild!==dash)home.prepend(dash)}document.body.classList.add('t2-overview-positioned')}
+function boot(){place();window.addEventListener('stay:navigation',e=>{if(e.detail?.route==='home')requestAnimationFrame(place)});window.addEventListener('stay:scope-change',()=>requestAnimationFrame(place));const home=document.querySelector('.app-screen[data-screen-panel="home"]');if(home&&!document.getElementById('homeScopePanel')){const o=new MutationObserver(()=>{place();if(document.getElementById('homeScopePanel'))o.disconnect()});o.observe(home,{childList:true,subtree:true})}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
