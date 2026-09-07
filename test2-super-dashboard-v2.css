@@ -26,7 +26,7 @@
 .t2v2-kpis strong{display:block;margin:7px 0;font-size:17px;white-space:nowrap}
 .t2v2-kpis .good strong,.t2v2-table-card .positive{color:#15925d}
 .t2v2-kpis .bad strong{color:#dc3347}
-.t2v2-kpis .purple strong{color:#5b21d1}
+.t2v2-kpis .purple strong{color:#6d28d9}
 .t2v2-alert{display:block;width:100%;text-align:left;border:1px solid #f2cf87;background:#fff8e8;color:#8a5a00;border-radius:10px;padding:10px 12px;margin-bottom:10px}
 .t2v2-alert[hidden]{display:none}
 .t2v2-charts{display:grid;grid-template-columns:1.2fr 1fr;gap:10px}
@@ -38,15 +38,15 @@
 .t2v2-bar-pair i.expense{background:#ef3f4e}
 .t2v2-bar-pair small{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);color:#667085}
 .t2v2-donut-wrap{display:flex;align-items:center;justify-content:center;gap:25px;min-height:190px}
-.t2v2-donut{--a:30%;--b:75%;width:150px;height:150px;border-radius:50%;background:conic-gradient(#18a264 0 var(--a),#ef3f4e var(--a) var(--b),#2459dd var(--b));position:relative;flex:0 0 auto}
+.t2v2-donut{--a:30%;--b:75%;width:150px;height:150px;border-radius:50%;background:conic-gradient(#6d28d9 0 var(--a),#ef3f4e var(--a) var(--b),#f59e0b var(--b));position:relative;flex:0 0 auto}
 .t2v2-donut:after{content:"";position:absolute;inset:30px;background:#fff;border-radius:50%}
 .t2v2-donut span{position:absolute;inset:0;z-index:1;display:grid;place-content:center;text-align:center;font-size:11px}
 .t2v2-donut b{font-size:15px}
 .t2v2-donut-wrap ul{list-style:none;margin:0;padding:0;display:grid;gap:13px;font-size:11px;min-width:175px}
 .t2v2-donut-wrap li{display:grid;grid-template-columns:10px 1fr auto;gap:7px;align-items:center}
-.t2v2-donut-wrap i{width:9px;height:9px;border-radius:3px;background:#18a264}
+.t2v2-donut-wrap i{width:9px;height:9px;border-radius:3px;background:#6d28d9}
 .t2v2-donut-wrap i.recurring{background:#ef3f4e}
-.t2v2-donut-wrap i.other{background:#2459dd}
+.t2v2-donut-wrap i.other{background:#f59e0b}
 .t2v2-actions{display:flex;gap:8px;margin:10px 0}
 .t2v2-actions button{color:#5b21d1}
 .t2v2-table-card table{width:100%;border-collapse:collapse;font-size:11px}
@@ -69,28 +69,9 @@
 .t2v2-ad .controls button{width:30px;height:30px;border:1px solid #e2e6ef;background:#fff;border-radius:8px;font-size:18px}
 .t2v2-ad .controls strong{font-size:12px}
 .t2v2-ad>p{text-align:center;color:#5b21d1;font-size:10px;margin:8px 0 2px}
-@media(max-width:1350px){.t2v2-kpis{grid-template-columns:repeat(4,1fr)}
-.t2v2-layout{grid-template-columns:minmax(0,1fr) 190px}
-.t2v2-ad .image{height:520px}
-}
-@media(max-width:1050px){.t2v2-layout{grid-template-columns:1fr}
-.t2v2-ad{position:relative;top:auto}
-.t2v2-ad .image{height:280px}
-.t2v2-filters .reservation-form{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:720px){.t2-super-v2 main.container{padding:14px 10px 95px!important}
-.t2v2-head{display:block}
-.t2v2-head-actions{margin-top:10px;overflow:auto}
-.t2v2-kpis{grid-template-columns:repeat(2,1fr)}
-.t2v2-charts{grid-template-columns:1fr}
-.t2v2-filters .reservation-form{grid-template-columns:1fr}
-.t2v2-table-scroll{overflow:auto}
-.t2v2-table-card table{min-width:780px}
-.t2v2-donut-wrap{flex-direction:column}
-.t2v2-ad .image{height:330px}
-}
-
-/* Segunda etapa: escala confortável e uso completo da largura disponível. */
+@media(max-width:1350px){.t2v2-kpis{grid-template-columns:repeat(4,1fr)}.t2v2-layout{grid-template-columns:minmax(0,1fr) 190px}.t2v2-ad .image{height:520px}}
+@media(max-width:1050px){.t2v2-layout{grid-template-columns:1fr}.t2v2-ad{position:relative;top:auto}.t2v2-ad .image{height:280px}.t2v2-filters .reservation-form{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.t2-super-v2 main.container{padding:14px 10px 95px!important}.t2v2-head{display:block}.t2v2-head-actions{margin-top:10px;overflow:auto}.t2v2-kpis{grid-template-columns:repeat(2,1fr)}.t2v2-charts{grid-template-columns:1fr}.t2v2-filters .reservation-form{grid-template-columns:1fr}.t2v2-table-scroll{overflow:auto}.t2v2-table-card table{min-width:780px}.t2v2-donut-wrap{flex-direction:column}.t2v2-ad .image{height:330px}}
 .t2-super-v2 main.container{width:100%!important;max-width:none!important;padding:24px 28px 110px 278px!important}
 .t2-super-v2 .t2-pro-sidebar{width:258px;padding:16px 14px}
 .t2-super-v2 .t2-pro-menu button{padding:9px 11px;font-size:13px}
