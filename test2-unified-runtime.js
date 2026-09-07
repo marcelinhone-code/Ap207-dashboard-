@@ -1,7 +1,7 @@
 (()=>{'use strict';
 const AUTH='ap207-auth-profile-v1',SCOPE='stay-home-scope-v1';
 const PRIMARY={home:'home',reservations:'reservations',calendar:'calendar',reports:'reports'};
-const EXTRA={properties:'t2UnifiedProperties',expenses:'t2UnifiedFinancial',contracts:'t2UnifiedContracts',settings:'t2UnifiedSettings',admins:'t2ProfessionalAdmins',plans:'t2ProfessionalPlans',courtesy:'t2AccessPanel',logs:'t2Audit',publicity:'t2Banners',analytics:'t2Analytics'};
+const EXTRA={properties:'t2UnifiedProperties',expenses:'t2UnifiedFinancial',contracts:'t2UnifiedContracts',settings:'t2UnifiedSettings',admins:'t2ProfessionalAdmins',plans:'t2ProfessionalPlans',courtesy:'t2UnifiedCourtesy',logs:'t2Audit',publicity:'t2Banners',analytics:'t2Analytics'};
 const ALIAS={owners:'properties',extras:'expenses',integrations:'contracts',support:'settings'};
 const SUPER=new Set(['admins','plans','courtesy','logs','publicity','analytics']);
 const $=id=>document.getElementById(id),q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -20,10 +20,10 @@ function group(id){let g=$(id);if(!g){g=document.createElement('section');g.id=i
 function moveNode(n,g){if(n&&g&&n!==g&&n.parentNode!==g)g.append(n)}function move(id,g){moveNode($(id),g)}function movePrimary(name,g){moveNode(q(`.app-screen[data-screen-panel="${name}"]`),g)}
 function classifyLegacy(){qa('section.panel').forEach(sec=>{const h=(sec.querySelector('h2')?.textContent||'').trim().toLowerCase();if(!h)return;if(h==='contratos de locação'&&!sec.id)sec.id='t2FeatureContracts';if(h.includes('receitas adicionais')&&h.includes('danos')&&!sec.id)sec.id='t2FeatureExtras'})}
 function support(g){let n=$('t2UnifiedSupport');if(!n){n=document.createElement('section');n.id='t2UnifiedSupport';n.className='panel';const h=document.createElement('h2');h.textContent='Central de Atendimento';const p=document.createElement('p');p.textContent='Fale diretamente com o suporte pelo WhatsApp.';const a=document.createElement('a');a.className='button button-primary';a.href='https://wa.me/15612756810';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Abrir WhatsApp';n.append(h,p,a)}moveNode(n,g)}
-function organize(){classifyLegacy();const r=role(),gp=group('t2UnifiedProperties'),gf=group('t2UnifiedFinancial'),gc=group('t2UnifiedContracts'),gs=group('t2UnifiedSettings');
+function organize(){classifyLegacy();const r=role(),gp=group('t2UnifiedProperties'),gf=group('t2UnifiedFinancial'),gc=group('t2UnifiedContracts'),gs=group('t2UnifiedSettings'),gco=group('t2UnifiedCourtesy');
 move('t2ProfessionalProperties',gp);if(r!=='owner'){['stayUserSection','propertySettings','t2PropertyAssignments','t2PropertyLinking','t2ProfessionalOwners'].forEach(id=>move(id,gp))}
 movePrimary('expenses',gf);if(r!=='owner')['t2Operations','t2FeatureExtras'].forEach(id=>move(id,gf));else move('t2FeatureExtras',gf);
-['t2Integrations','t2Contracts','t2FeatureContracts'].forEach(id=>move(id,gc));move('t2ProfessionalSettings',gs);support(gs)}
+['t2Integrations','t2Contracts','t2FeatureContracts'].forEach(id=>move(id,gc));move('t2ProfessionalSettings',gs);support(gs);if(r==='super_admin')['t2CourtesyPanel','t2AccessPanel'].forEach(id=>move(id,gco))}
 function managedRoots(){const out=[];qa('.app-screen').forEach(x=>out.push(x));qa('#t2Suite > section').forEach(x=>out.push(x));qa('main.container > section.panel').forEach(x=>out.push(x));Object.values(EXTRA).forEach(id=>{const x=$(id);if(x)out.push(x)});return[...new Set(out)]}
 function hideEverything(){managedRoots().forEach(x=>{x.hidden=true;x.style.display='none'})}
 function showNode(n){if(!n)return;n.classList.remove('t2-hidden');n.hidden=false;n.style.removeProperty('display');if(getComputedStyle(n).display==='none')n.style.setProperty('display','block','important')}
@@ -32,6 +32,7 @@ function showKnownChildren(k,t){showNode(t);revealParents(t);const r=role();if(k
 else if(k==='expenses'){showNode(q('.app-screen[data-screen-panel="expenses"]'));if(r!=='owner')['t2Operations','t2FeatureExtras'].forEach(id=>showNode($(id)));else showNode($('t2FeatureExtras'))}
 else if(k==='contracts'){['t2Integrations','t2Contracts','t2FeatureContracts'].forEach(id=>showNode($(id)))}
 else if(k==='settings'){['t2ProfessionalSettings','t2UnifiedSupport'].forEach(id=>showNode($(id)))}
+else if(k==='courtesy'){['t2CourtesyPanel','t2AccessPanel'].forEach(id=>showNode($(id)))}
 else if(k==='calendar'||k==='reports'){qa(':scope > section.panel',t).forEach(showNode)}}
 function target(k){if(PRIMARY[k])return q(`.app-screen[data-screen-panel="${PRIMARY[k]}"]`);return $(EXTRA[k])}
 function active(k){qa('.t2-pro-menu button[data-route],.t2-pro-mobilebar button[data-route]').forEach(b=>b.classList.toggle('active',(ALIAS[b.dataset.route]||b.dataset.route)===k))}
