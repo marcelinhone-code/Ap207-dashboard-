@@ -1,0 +1,23 @@
+(()=>{'use strict';
+const AUTH='ap207-auth-profile-v1';
+const PRIMARY={home:'home',reservations:'reservations',calendar:'calendar',reports:'reports'};
+const EXTRA={properties:'t2UnifiedProperties',expenses:'t2UnifiedFinancial',contracts:'t2UnifiedContracts',settings:'t2UnifiedSettings',admins:'t2ProfessionalAdmins',plans:'t2ProfessionalPlans',courtesy:'t2UnifiedCourtesy',logs:'t2Audit',publicity:'t2Banners',analytics:'t2Analytics'};
+const ALIAS={owners:'properties',extras:'expenses',integrations:'contracts',support:'settings'};
+const SUPER=new Set(['admins','plans','courtesy','logs','publicity','analytics']);
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)],$=id=>document.getElementById(id);
+function role(){try{return JSON.parse(localStorage.getItem(AUTH)||'{}')?.profile?.role||'owner'}catch{return'owner'}}
+function canonical(r){return ALIAS[r]||r||'home'}
+function target(r){const k=canonical(r);return PRIMARY[k]?q(`.app-screen[data-screen-panel="${PRIMARY[k]}"]`):$(EXTRA[k])}
+function visible(n){if(!n||n.hidden)return false;const s=getComputedStyle(n);return s.display!=='none'&&s.visibility!=='hidden'}
+function managedRoots(){const out=[...qa('.app-screen'),...qa('#t2Suite > section'),...qa('main.container > section.panel')];Object.values(EXTRA).forEach(id=>{const n=$(id);if(n)out.push(n)});return [...new Set(out)]}
+function permitted(k){return !SUPER.has(k)||role()==='super_admin'}
+function sanitizeButton(b){if(!b||b.dataset.t2DeepStable==='1')return b;const r=b.dataset.route;if(!r||r==='logout'||r==='more')return b;const clone=b.cloneNode(true);clone.dataset.t2DeepStable='1';delete clone.dataset.pm;clone.removeAttribute('onclick');clone.onclick=null;b.replaceWith(clone);return clone}
+function sanitizeMenus(){qa('.t2-pro-menu [data-route],.t2-pro-mobilebar [data-route]').forEach(sanitizeButton)}
+function enforceRoleMenus(){const isSuper=role()==='super_admin';qa('.t2-pro-menu [data-route],.t2-pro-mobilebar [data-route]').forEach(b=>{const k=canonical(b.dataset.route);if(SUPER.has(k)){if(isSuper)b.style.removeProperty('display');else b.style.setProperty('display','none','important')}})}
+function current(){return canonical(document.body.dataset.t2Route||(location.hash||'#home').slice(1)||'home')}
+function audit(){const r=current(),t=target(r),roots=managedRoots(),shown=roots.filter(visible),issues=[];if(!permitted(r))issues.push(`rota não permitida: ${r}`);if(!t)issues.push(`alvo ausente: ${r}`);else if(!visible(t))issues.push(`alvo oculto: ${r}`);const foreign=shown.filter(n=>n!==t&&!t?.contains(n)&&!n.contains?.(t)&&n.id!=='homeScopePanel');if(foreign.length)issues.push('raízes extras visíveis: '+foreign.map(n=>n.id||n.dataset.screenPanel||n.className).join(', '));const menuDup=qa('.t2-pro-menu [data-route],.t2-pro-mobilebar [data-route]').filter(b=>b.dataset.route!=='logout'&&b.dataset.route!=='more'&&b.dataset.t2DeepStable!=='1');if(menuDup.length)issues.push('handlers legados ainda não isolados: '+menuDup.length);return{ok:issues.length===0,route:r,role:role(),target:t?.id||t?.dataset?.screenPanel||null,visibleRoots:shown.map(n=>n.id||n.dataset.screenPanel||n.className),issues}}
+function repair(){sanitizeMenus();enforceRoleMenus();const r=current();if(!permitted(r)&&window.Test2Unified?.show){window.Test2Unified.show('home',false);return}const t=target(r);if(window.Test2Unified?.show&&(!t||!visible(t))){window.Test2Unified.show(r,false)}}
+function schedule(){if(schedule.pending)return;schedule.pending=true;requestAnimationFrame(()=>{schedule.pending=false;repair()})}
+function boot(){repair();document.addEventListener('click',e=>{const b=e.target.closest?.('.t2-pro-menu [data-route],.t2-pro-mobilebar [data-route]');if(!b)return;const r=b.dataset.route;if(r==='logout'||r==='more')return;const k=canonical(r);if(!permitted(k)){e.preventDefault();e.stopImmediatePropagation();window.Test2Unified?.show('home',false);return}if(window.Test2Unified?.show){e.preventDefault();e.stopImmediatePropagation();window.Test2Unified.show(k,true)}},true);window.addEventListener('stay:unified-navigation',schedule);window.addEventListener('stay:language-change',schedule);window.addEventListener('pageshow',schedule);new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['data-pm','data-route','hidden','class','style']});window.Test2DeepAudit=audit;window.Test2DeepRepair=repair;const first=audit();if(!first.ok)console.warn('[Test2 deep audit]',first)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
