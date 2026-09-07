@@ -1,7 +1,7 @@
 (()=>{'use strict';
 const AUTH='ap207-auth-profile-v1',SCOPE='stay-home-scope-v1';
 const PRIMARY={home:'home',reservations:'reservations',calendar:'calendar',reports:'reports'};
-const EXTRA={properties:'t2UnifiedProperties',expenses:'t2UnifiedFinancial',contracts:'t2UnifiedContracts',settings:'t2UnifiedSettings',admins:'t2ProfessionalAdmins',plans:'t2ProfessionalPlans',courtesy:'t2CourtesyPanel',logs:'t2Audit',publicity:'t2Banners',analytics:'t2Analytics'};
+const EXTRA={properties:'t2UnifiedProperties',expenses:'t2UnifiedFinancial',contracts:'t2UnifiedContracts',settings:'t2UnifiedSettings',admins:'t2ProfessionalAdmins',plans:'t2ProfessionalPlans',courtesy:'t2AccessPanel',logs:'t2Audit',publicity:'t2Banners',analytics:'t2Analytics'};
 const ALIAS={owners:'properties',extras:'expenses',integrations:'contracts',support:'settings'};
 const SUPER=new Set(['admins','plans','courtesy','logs','publicity','analytics']);
 const $=id=>document.getElementById(id),q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
