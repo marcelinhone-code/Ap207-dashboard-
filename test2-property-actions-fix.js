@@ -6,17 +6,22 @@ function css(){if($('t2PropertyActionsFixCss'))return;const s=document.createEle
 .property-manager-actions #newPropertyButton{display:none!important}
 #t2ucPropertiesHead .t2uc-actions{display:flex!important}
 `;document.head.append(s)}
-function showProperties(){window.Test2Unified?.show?.('properties',false)}
+function showProperties(){return window.Test2Unified?.show?.('properties',false)}
+function revealPropertyForm(){
+  showProperties();
+  const suite=$('t2Suite'),group=$('t2UnifiedProperties'),sec=$('propertySettings'),form=$('newPropertyForm');
+  if(suite){suite.hidden=false;suite.style.removeProperty('display')}
+  if(group){group.hidden=false;group.style.removeProperty('display')}
+  if(sec){sec.hidden=false;sec.style.removeProperty('display')}
+  if(form){form.hidden=false;form.style.removeProperty('display');form.scrollIntoView({behavior:'auto',block:'start'});requestAnimationFrame(()=>$('newPropertyOwnerName')?.focus())}
+}
 function openProperty(){
   showProperties();
   try{window.SystemControlPropertyManager?.install?.()}catch{}
-  if(window.SystemControlPropertyManager?.open){window.SystemControlPropertyManager.open();return}
-  const native=$('newPropertyButton');
-  if(native)native.click();
-  showProperties();
-  const sec=$('propertySettings'),form=$('newPropertyForm');
-  if(sec){sec.hidden=false;sec.style.removeProperty('display')}
-  if(form){form.hidden=false;form.style.removeProperty('display');form.scrollIntoView({behavior:'auto',block:'start'});requestAnimationFrame(()=>$('newPropertyOwnerName')?.focus())}
+  let opened=false;
+  try{if(window.SystemControlPropertyManager?.open)opened=window.SystemControlPropertyManager.open()!==false}catch{}
+  if(!opened){const native=$('newPropertyButton');if(native){native.click();opened=true}}
+  revealPropertyForm();
 }
 function openOwner(){
   showProperties();
