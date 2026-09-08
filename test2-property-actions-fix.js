@@ -10,6 +10,7 @@ function showProperties(){window.Test2Unified?.show?.('properties',false)}
 function openProperty(){
   showProperties();
   try{window.SystemControlPropertyManager?.install?.()}catch{}
+  if(window.SystemControlPropertyManager?.open){window.SystemControlPropertyManager.open();return}
   const native=$('newPropertyButton');
   if(native)native.click();
   showProperties();
@@ -19,8 +20,7 @@ function openProperty(){
 }
 function openOwner(){
   showProperties();
-  const native=document.querySelector('#t2ProfessionalOwners>.t2pm-toolbar button');
-  if(native)native.click();
+  if(typeof window.Test2OpenOwnerForm==='function')window.Test2OpenOwnerForm();
   const box=$('t2OwnerCreateBox');
   if(box){box.hidden=false;box.style.removeProperty('display');box.scrollIntoView({behavior:'auto',block:'start'});requestAnimationFrame(()=>box.querySelector('#t2OwnerName')?.focus())}
 }
