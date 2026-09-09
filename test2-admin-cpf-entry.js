@@ -1,0 +1,7 @@
+(()=>{'use strict';
+const AUTH='ap207-auth-profile-v1';
+function role(){try{return JSON.parse(localStorage.getItem(AUTH)||'{}')?.profile?.role||''}catch{return''}}
+function ensure(){if(role()!=='super_admin')return;const root=document.getElementById('t2ProfessionalAdmins');if(!root||root.querySelector('[data-t2-admin-cpf-entry]'))return;const head=root.querySelector('.t2pm-head')||root.firstElementChild||root;const bar=document.createElement('div');bar.className='t2pm-toolbar';bar.dataset.t2AdminCpfEntry='1';const btn=document.createElement('button');btn.type='button';btn.className='button button-primary';btn.textContent='+ Novo administrador';btn.onclick=()=>{if(window.Test2CpfAdminInvite?.open)window.Test2CpfAdminInvite.open();else alert('O cadastro de administrador ainda está carregando. Tente novamente.')};bar.append(btn);head.insertAdjacentElement('afterend',bar)}
+function boot(){ensure();window.addEventListener('stay:unified-navigation',e=>{if(e.detail?.route==='admins')requestAnimationFrame(ensure)});window.addEventListener('stay:roles-changed',()=>requestAnimationFrame(ensure))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
