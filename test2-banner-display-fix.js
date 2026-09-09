@@ -1,14 +1,17 @@
 (()=>{'use strict';
-const STYLE_ID='t2BannerDisplayFixCss';
+const STYLE_ID='t2BannerDisplayFixCss',OVERLAY_ID='t2SponsorMirrorBanner';
 function css(){if(document.getElementById(STYLE_ID))return;const s=document.createElement('style');s.id=STYLE_ID;s.textContent=`
-.scenic-banner.t2-ad-full{position:relative!important;background:#e9eef5!important;overflow:hidden!important}
-.scenic-banner.t2-ad-full::before,.scenic-banner.t2-ad-full::after{display:none!important;content:none!important}
-.scenic-banner .t2-scenic-ad-overlay{z-index:20!important;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;background-color:#e9eef5!important;opacity:1!important;transition:none!important;filter:none!important}
-#t2RealBannerOverlay{z-index:35!important;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important}
-#t2DeepBanner27Overlay{z-index:80!important}
-@media(max-width:650px){.scenic-banner .t2-scenic-ad-overlay,#t2RealBannerOverlay,#t2DeepBanner27Overlay{background-position:center center!important}}
+.scenic-banner{position:relative!important;overflow:hidden!important;background:#e9eef5!important}
+.scenic-banner::before,.scenic-banner::after{display:none!important;content:none!important}
+.scenic-banner .t2-scenic-ad-overlay,#t2RealBannerOverlay,#t2DeepBanner27Overlay{display:none!important}
+#${OVERLAY_ID}{position:absolute!important;inset:0!important;z-index:2147481000!important;background:#e9eef5 center center/cover no-repeat!important;opacity:1!important;display:block!important;border-radius:inherit!important;pointer-events:none!important}
+#${OVERLAY_ID}.is-contain{background-size:contain!important;background-color:#fff!important}
 `;document.head.append(s)}
-function realPhotos(){document.querySelectorAll('script[data-t2-real-banner-photos]').forEach(x=>x.remove());const s=document.createElement('script');s.src='./test2-banner-real-photos.js?v=20260909-deep27-v2';s.async=false;s.dataset.t2RealBannerPhotos='1';document.body.append(s)}
-function boot(){css();realPhotos()}
+function host(){const h=document.querySelector('.scenic-banner');if(!h)return null;let o=document.getElementById(OVERLAY_ID);if(!o){o=document.createElement('div');o.id=OVERLAY_ID;h.append(o)}else if(o.parentElement!==h)h.append(o);return o}
+function sponsorImage(){const link=document.querySelector('#t2FloatingSponsor .t2-float-link');if(!link)return'';const inline=link.style.backgroundImage;if(inline&&inline!=='none')return inline;const computed=getComputedStyle(link).backgroundImage;return computed&&computed!=='none'?computed:''}
+function mirror(){const o=host();if(!o)return;const bg=sponsorImage();if(bg){o.style.setProperty('background-image',bg,'important');o.classList.remove('is-contain')} }
+let obs=null,timer=null;
+function watch(){const s=document.getElementById('t2FloatingSponsor');if(!s)return false;if(obs)obs.disconnect();obs=new MutationObserver(()=>requestAnimationFrame(mirror));obs.observe(s,{subtree:true,childList:true,attributes:true,attributeFilter:['style','class']});mirror();return true}
+function boot(){css();mirror();let tries=0;timer=setInterval(()=>{tries++;if(watch()||tries>40)clearInterval(timer)},250);window.addEventListener('t2-banners-updated',()=>setTimeout(mirror,0));window.addEventListener('stay:navigation',()=>requestAnimationFrame(mirror));window.addEventListener('stay:unified-navigation',()=>requestAnimationFrame(mirror));window.addEventListener('pageshow',()=>setTimeout(mirror,0));document.addEventListener('visibilitychange',()=>{if(!document.hidden)mirror()})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
