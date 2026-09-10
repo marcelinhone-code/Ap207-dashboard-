@@ -18,7 +18,10 @@ window.setInterval=function(fn,delay,...args){
 window.setTimeout=function(fn,delay,...args){
   try{
     const src=typeof fn==='function'?Function.prototype.toString.call(fn):'',ms=Number(delay);
-    if((ms===120&&src.includes('newPropertyOwnerName'))||(ms===900&&src.includes('location.reload')))return nativeSetTimeout(fn,0,...args);
+    const fastNavigation=ms===80&&(src.includes('scrollIntoView')||src.includes('propertySettings')||src.includes("scrollText(t('owner'))")||src.includes("scrollText(t('admin'))")||src.includes("scrollText(t('plans'))"));
+    const fastUiSync=(ms===20&&src.includes('maintain'))||(ms===300&&src.includes('maintain'));
+    const fastForms=(ms===120&&src.includes('newPropertyOwnerName'))||(ms===900&&src.includes('location.reload'));
+    if(fastNavigation||fastUiSync||fastForms)return nativeSetTimeout(fn,0,...args);
   }catch{}
   return nativeSetTimeout(fn,delay,...args);
 };
